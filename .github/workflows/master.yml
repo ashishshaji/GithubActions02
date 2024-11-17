@@ -1,14 +1,21 @@
 name: master orchestation workflow
-on: 
-    workflow_run: 
-        workflows: ["Config File Generator"] 
-        types: 
-            - completed
-
+on:
+  workflow_run:
+    workflows:
+      - Config File Generator
+    types:
+      - completed
 jobs:
   my-job:
     runs-on: ubuntu-latest
     steps:
-      - name: my-step
-        run: echo "Hello World!"
-   
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download JSON artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: config-json
+          path: .
+      - name: Process JSON
+        run: |
+          cat config.json
