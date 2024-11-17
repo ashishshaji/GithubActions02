@@ -1,19 +1,16 @@
 name: Config File Workflow
-
 on:
   push:
     branches:
       - test
-
 jobs:
   generate-config:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Generate JSON file
-        run: |
+        run: >
           echo '{ 
             "Repo1": { 
               "source_system": "Bitbucket", 
@@ -32,28 +29,53 @@ jobs:
               "phone": "555-555-5555" 
             } 
           }' > config.json
-
       - name: Display JSON file
         run: cat config.json
-
       - name: Upload JSON artifact
         uses: actions/upload-artifact@v4
         with:
           name: config-json
           path: config.json
-
-  process-config:
+  master-config:
     needs: generate-config
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Download JSON artifact
         uses: actions/download-artifact@v4
         with:
           name: config-json
           path: .
-
-      - name: Process JSON
+      - name: display JSON file
         run: cat config.json
+      - name: Read JSON
+        id: read_json
+        run: >
+          json_file="jsonfile/dummy.json"
+
+          repo=$(cat $json_file | jq -r '.repo')
+
+          source_system=$(jq -r '.Repo1.source_system' "$json_file") 
+
+          validate_jenkins_migration=$(jq -r '.Repo1.Validate_Jenkins_Migration' "$json_file") 
+
+          echo "Repo: $repo"
+
+          echo "source_system=$source_system" >> $GITHUB_ENV
+
+          echo "validate_jenkins_migration=$validate_jenkins_migration" >> $GITHUB_ENV
+      - name: execute bitbucket migration
+        run: |
+          echo $source_system
+          if [ $source_system = "Bitbucket" ]; then
+           echo "run bitbucket migration"
+          fi
+          echo "completed bitbucket migration"
+      - name: execute jenkins migration
+        run: |
+          echo $validate_jenkins_migration
+          if [ $validate_jenkins_migration = "Y" ]; then
+           echo "run Jenkins migration"
+          fi
+          echo "completed Jenkins migration"     
