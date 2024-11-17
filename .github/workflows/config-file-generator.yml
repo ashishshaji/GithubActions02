@@ -1,0 +1,11 @@
+name: config file generator
+on:
+  push:
+    branches:
+      - main
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: my-step
+        run: echo "config file generator"
