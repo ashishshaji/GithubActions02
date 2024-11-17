@@ -1,0 +1,14 @@
+name: master orchestation workflow
+on: 
+    workflow_run: 
+        workflows: ["Config File Generator"] 
+        types: 
+            - completed
+
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: my-step
+        run: echo "Hello World!"
+   
