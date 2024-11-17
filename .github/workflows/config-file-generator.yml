@@ -9,3 +9,23 @@ jobs:
     steps:
       - name: my-step
         run: echo "config file generator"
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: generate json file
+        run: |
+          | echo '{ "Repo1":
+             { "source_system": "Bitbucket", 
+              "Bitbucket_Repo": "https://www.bitbucket-dummy.com/project1/repo1", 
+              "Migration_story": "https://www.jira-dummy.com/project1/story1",
+               "Migration_wave": "wave1", "Validate_Repo_Migration": "Y", 
+               "Validate_Jenkins_Migration": "Y",
+                "Jenkins_Job": { "Jenkins_Job_Path": "https://www.jenkins-dummy.com/project1", 
+                "Jenkins_Job_Name": ["CI_Job1", "CI_Job2", "CI_Job3"] } }, 
+                "App_Contact": { 
+                "email": "ashish@gmail.com", 
+                "phone": "555-555-5555" }
+          }
+          } > config.json
+           
+      - name: Display JSON file 
+        run: cat config.json
