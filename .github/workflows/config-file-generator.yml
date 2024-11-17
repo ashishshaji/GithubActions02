@@ -35,3 +35,10 @@ jobs:
 
       - name: Display JSON file
         run: cat config.json
+
+      - name: upload json file to artifact
+        uses: actions/upload-artifact@v2
+        with:
+           name: config.json 
+           path: config.json
+
