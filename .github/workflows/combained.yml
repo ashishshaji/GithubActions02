@@ -52,7 +52,7 @@ jobs:
       - name: Read JSON
         id: read_json
         run: >
-          json_file="jsonfile/dummy.json"
+          json_file="config.json"
 
           repo=$(cat $json_file | jq -r '.repo')
 
