@@ -1,7 +1,0 @@
-name: work-flow-2
-on:
-  push:
-    branches:
-      - main
-
-   
