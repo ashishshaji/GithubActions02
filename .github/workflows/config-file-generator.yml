@@ -37,8 +37,8 @@ jobs:
         run: cat config.json
 
       - name: upload json file to artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-           name: config.json 
+           name: config-json 
            path: config.json
 

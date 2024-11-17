@@ -12,9 +12,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Download JSON artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: config.json
+          name: config-json
           path: .
       - name: Process JSON
         run: |
