@@ -3,7 +3,7 @@ name: Config File Workflow
 on:
   push:
     branches:
-      - Final_test
+      - working
 
 jobs:
   generate-config:
@@ -45,22 +45,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Download JSON artifact
         uses: actions/download-artifact@v4
         with:
           name: config-json
           path: .
-      - name: Display JSON file
-        run: cat config.json
+
       - name: Read JSON and set environment variables
         run: |
           json_file="config.json"
           jq -r '.Repo1 | to_entries[]? | select(.value!=null) | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
             echo "$line" >> $GITHUB_ENV
           done
-
-      - name: Print specific environment variables from JSON
-        run: cat $GITHUB_ENV
 
       - name: Run Bitbucket to GitHub
         if: env.Source_System == 'Bitbucket'
@@ -82,6 +79,4 @@ jobs:
         run: |
             echo "running Jenkins migration"    
             
-      - name: Print specific environment variables from JSON
-        run: echo $Validate_Jenkins_Migration
 
