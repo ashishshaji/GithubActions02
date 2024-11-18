@@ -52,7 +52,6 @@ jobs:
         run: cat $GITHUB_ENV
 
       - name: Run Bitbucket to GitHub
-    #   if: env.NEED != 'true'
         if: env.source_system == 'Bitbucket'
         run: |
           echo "running bb to gh migration"
