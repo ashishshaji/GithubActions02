@@ -68,25 +68,27 @@ jobs:
           done
 
       - name: run bitbucket to github
-         echo env
-         echo env.source_system
+        if: env.source_system == 'BitBucket'
         run: |
-          echo $source_system
-          if [ "$source_system" = "Bitbucket" ]; then
             echo "running bb to gh migration"
-          fi
 
-      - name: run azure devops to github migartion
-        run: |
-          if [ "$source_system" = "AzureDevops" ]; then
-            echo "running ado to gh migration"
-          fi
+      - name: Display Environment Variables 
 
-      - name: Conditional execution based on source system
-        run: |
-          if [ "$source_system" = "AzureDevops" ]; then
-            echo "running ado to gh migration"
-          fi
+        run: | 
+         echo "Source System: ${env.source_system}" 
+         echo "Bitbucket Repo: ${ env.Bitbucket_Repo }" 
+
+    #   - name: run azure devops to github migartion
+    #     run: |
+    #       if [ "$source_system" = "AzureDevops" ]; then
+    #         echo "running ado to gh migration"
+    #       fi
+
+    #   - name: Conditional execution based on source system
+    #     run: |
+    #       if [ "$source_system" = "AzureDevops" ]; then
+    #         echo "running ado to gh migration"
+    #       fi
 
 
         
