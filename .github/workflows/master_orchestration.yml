@@ -1,8 +1,10 @@
 name: Config File Workflow
+
 on:
   push:
     branches:
       - Final_test
+
 jobs:
   generate-config:
     runs-on: ubuntu-latest
@@ -36,6 +38,7 @@ jobs:
         with:
           name: config-json
           path: config.json
+
   master-config:
     needs: generate-config
     runs-on: ubuntu-latest
@@ -47,16 +50,17 @@ jobs:
         with:
           name: config-json
           path: .
-      - name: display JSON file
+      - name: Display JSON file
         run: cat config.json
-
       - name: Read JSON and set environment variables
         run: |
           json_file="config.json"
-          jq -r '.Repo | to_entries | .[] | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line;
-           do
+          jq -r '.Repo1 | to_entries[]? | select(.value!=null) | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
             echo "$line" >> $GITHUB_ENV
           done
+
+      - name: Print specific environment variables from JSON
+        run: cat $GITHUB_ENV
 
       - name: Run Bitbucket to GitHub
         if: env.Source_System == 'Bitbucket'
@@ -80,3 +84,4 @@ jobs:
             
       - name: Print specific environment variables from JSON
         run: echo $Validate_Jenkins_Migration
+
