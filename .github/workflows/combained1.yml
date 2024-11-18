@@ -69,5 +69,6 @@ jobs:
             IFS= read -r line; do echo "$line" >> $GITHUB_ENV 
            done
 
-      - name: repo source system
-        run: echo $Repo1_source_system
+      - name: Print specific environment variables 
+        run: | 
+            cat $GITHUB_ENV
