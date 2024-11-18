@@ -1,4 +1,4 @@
-name: Config File Workflow
+name: Conditional Execution Workflow
 
 on:
   push:
@@ -6,16 +6,16 @@ on:
       - test1
 
 jobs:
-  generate-config:
+  conditional-job:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Generate JSON file
-        run: >
+        run: |
           echo '{ 
-            "Repo": { 
+            "Repo1": { 
               "source_system": "Bitbucket", 
               "Bitbucket_Repo": "https://www.bitbucket-dummy.com/project1/repo1", 
               "Migration_story": "https://www.jira-dummy.com/project1/story1", 
@@ -37,58 +37,27 @@ jobs:
         run: cat config.json
 
       - name: Upload JSON artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: config-json
           path: config.json
 
-  master-config:
-    needs: generate-config
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download JSON artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: config-json
-          path: .
-
-      - name: Display JSON file
-        run: cat config.json
-
       - name: Read JSON and set environment variables
-        id: read_json
         run: |
           json_file="config.json"
+          source_system=$(jq -r '.Repo1.source_system' "$json_file")
+          echo "source_system=$source_system" >> $GITHUB_ENV
 
-          jq -r '.Repo | to_entries | .[] | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
-            echo "$line" >> $GITHUB_ENV
-          done
+      - name: Print specific environment variables from JSON
+        run: cat $GITHUB_ENV
 
-      - name: run bitbucket to github
-        if: env.source_system == 'Bitbucket'
-        run: |
-            echo "running bb to gh migration"
-
-      - name: Display Environment Variables 
-
-        run: | 
-         echo "Source System: $source_system" 
-         echo "Bitbucket Repo: $env.Bitbucket_Repo" 
-
-    #   - name: run azure devops to github migartion
-    #     run: |
-    #       if [ "$source_system" = "AzureDevops" ]; then
-    #         echo "running ado to gh migration"
-    #       fi
-
-    #   - name: Conditional execution based on source system
-    #     run: |
-    #       if [ "$source_system" = "AzureDevops" ]; then
-    #         echo "running ado to gh migration"
-    #       fi
-
-
+      - name: Run Bitbucket to GitHub
         
+        if: ${{ env.source_system == 'Bitbucket' }}
+        run: |
+          echo "running bb to gh migration"
+
+      - name: Run Azure DevOps to GitHub migration
+        if: ${{ env.source_system == 'AzureDevops' }}
+        run: |
+          echo "running ado to gh migration"
