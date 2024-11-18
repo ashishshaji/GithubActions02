@@ -74,4 +74,7 @@ jobs:
       - name: Run Jenkins migration
         if: env.Validate_Jenkins_Migration == 'Y'
         run: |
-            echo "running Jenkins migration"      
+            echo "running Jenkins migration"    
+            
+      - name: Print specific environment variables from JSON
+        run: cat $GITHUB_ENV
