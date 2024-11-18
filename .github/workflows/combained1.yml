@@ -63,10 +63,9 @@ jobs:
         run: |
           json_file="config.json"
 
-          # Iterate over all keys in the JSON and create environment variables
-          jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' "$json_file" | while IFS= read -r line; do
-            echo "$line" >> $GITHUB_ENV
-          done
+          # Iterate over all keys in the JSON and print their values
+          jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' "$json_file"
 
-      - name: Print all environment variables
-        run: printenv
+      - name: Print specific JSON values
+        run: |
+          jq -r 'to_entries|map("\(.key):\(.value|tostring)")|.[]' config.json
