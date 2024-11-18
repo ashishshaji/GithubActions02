@@ -1,0 +1,72 @@
+name: Config File Workflow
+on:
+  push:
+    branches:
+      - test1
+jobs:
+  generate-config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Generate JSON file
+        run: >
+          echo '{ 
+            "Repo1": { 
+              "source_system": "Bitbucket", 
+              "Bitbucket_Repo": "https://www.bitbucket-dummy.com/project1/repo1", 
+              "Migration_story": "https://www.jira-dummy.com/project1/story1", 
+              "Migration_wave": "wave1", 
+              "Validate_Repo_Migration": "Y", 
+              "Validate_Jenkins_Migration": "Y", 
+              "Jenkins_Job": { 
+                "Jenkins_Job_Path": "https://www.jenkins-dummy.com/project1", 
+                "Jenkins_Job_Name": ["CI_Job1", "CI_Job2", "CI_Job3"] 
+              } 
+            }, 
+            "App_Contact": { 
+              "email": "ashish@gmail.com", 
+              "phone": "555-555-5555" 
+            } 
+          }' > config.json
+      - name: Display JSON file
+        run: cat config.json
+      - name: Upload JSON artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: config-json
+          path: config.json
+  master-config:
+    needs: generate-config
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download JSON artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: config-json
+          path: .
+      - name: display JSON file
+        run: cat config.json
+      - name: Read JSON
+        id: read_json
+        run: >
+          json_file="config.json"
+
+          repo=$(cat $json_file | jq -r '.repo')
+
+          source_system1=$(jq -r '.Repo1.source_system' "$json_file") 
+
+          validate_jenkins_migration1=$(jq -r '.Repo1.Validate_Jenkins_Migration' "$json_file") 
+
+          echo "Repo: $repo"
+
+          echo "source_system1=$source_system1" >> $GITHUB_ENV
+
+          echo "validate_jenkins_migration1=$validate_jenkins_migration1" >> $GITHUB_ENV
+
+          for key in $(jq -r 'to_entries|map("\(.key)")|.[]' "$json_file"); do value=$(jq -r --arg k "$key" '.[$k]' "$json_file") echo "${key}=${value}" >> $GITHUB_ENV done 
+      - name: Print all environment variables 
+        run: printenv
+
