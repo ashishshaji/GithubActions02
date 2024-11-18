@@ -13,12 +13,12 @@ jobs:
         run: >
           echo '{ 
             "Repo1": { 
-              "source_system": "Bitbucket", 
+              "Source_System": "Bitbucket", 
               "Bitbucket_Repo": "https://www.bitbucket-dummy.com/project1/repo1", 
               "Migration_story": "https://www.jira-dummy.com/project1/story1", 
               "Migration_wave": "wave1", 
-              "validate_Repo_Migration": "Y", 
-              "validate_Jenkins_Migration": "Y", 
+              "Validate_Repo_Migration": "Y", 
+              "Validate_Jenkins_Migration": "Y", 
               "Jenkins_Job": { 
                 "Jenkins_Job_Path": "https://www.jenkins-dummy.com/project1", 
                 "Jenkins_Job_Name": ["CI_Job1", "CI_Job2", "CI_Job3"] 
@@ -53,25 +53,25 @@ jobs:
       - name: Read JSON and set environment variables
         run: |
           json_file="config.json"
-          source_system=$(jq -r '.Repo1.source_system' "$json_file")
-          echo "source_system=$source_system" >> $GITHUB_ENV
+          Source_System=$(jq -r '.Repo1.Source_System' "$json_file")
+          echo "Source_System=$Source_System" >> $GITHUB_ENV
 
       - name: Run Bitbucket to GitHub
-        if: env.source_system == 'Bitbucket'
+        if: env.Source_System == 'Bitbucket'
         run: |
             echo "running bb to gh migration"
   
       - name: Run ADO to GitHub migration
-        if: env.source_system == 'AzureDevops'
+        if: env.Source_System == 'AzureDevops'
         run: |
          echo "running ado to gh migration"  
 
       - name: Run github to Github enterprise migration
-        if: env.source_system == 'Github'
+        if: env.Source_System == 'Github'
         run: |
           echo "running gh to gh enterprise migration"  
 
       - name: Run Jenkins migration
-        if: env.validate_jenkins_migration == 'Y'
+        if: env.Validate_Jenkins_Migration == 'Y'
         run: |
             echo "running Jenkins migration"      
