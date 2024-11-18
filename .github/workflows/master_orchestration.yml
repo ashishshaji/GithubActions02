@@ -17,8 +17,8 @@ jobs:
               "Bitbucket_Repo": "https://www.bitbucket-dummy.com/project1/repo1", 
               "Migration_story": "https://www.jira-dummy.com/project1/story1", 
               "Migration_wave": "wave1", 
-              "Validate_Repo_Migration": "Y", 
-              "Validate_Jenkins_Migration": "Y", 
+              "validate_Repo_Migration": "Y", 
+              "validate_Jenkins_Migration": "Y", 
               "Jenkins_Job": { 
                 "Jenkins_Job_Path": "https://www.jenkins-dummy.com/project1", 
                 "Jenkins_Job_Name": ["CI_Job1", "CI_Job2", "CI_Job3"] 
