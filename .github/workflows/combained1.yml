@@ -15,7 +15,7 @@ jobs:
       - name: Generate JSON file
         run: >
           echo '{ 
-            "Repo1": { 
+            "Repo": { 
               "source_system": "Bitbucket", 
               "Bitbucket_Repo": "https://www.bitbucket-dummy.com/project1/repo1", 
               "Migration_story": "https://www.jira-dummy.com/project1/story1", 
@@ -62,19 +62,34 @@ jobs:
         id: read_json
         run: |
           json_file="config.json"
-          # Iterate over all keys in the JSON and create environment variables
-          jq -r '.Repo1 | to_entries | .[] | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
+
+          jq -r '.Repo | to_entries | .[] | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
             echo "$line" >> $GITHUB_ENV
           done
 
-      - name: Print specific environment variables from JSON
-        run: cat $GITHUB_ENV
-
-      - name: Conditional execution based on source system
+      - name: run bitbucket to github
         run: |
           echo $source_system
           if [ "$source_system" = "Bitbucket" ]; then
-            echo "running bb"
-          else
-            echo "source_system is not Bitbucket"
+            echo "running bb to gh migration"
           fi
+        
+      - name: run bitbucket to github01
+         echo env.source_system
+        run: |
+          echo "running bb to gh migration01"
+
+      - name: run azure devops to github migartion
+        run: |
+          if [ "$source_system" = "AzureDevops" ]; then
+            echo "running ado to gh migration"
+          fi
+
+      - name: Conditional execution based on source system
+        run: |
+          if [ "$source_system" = "AzureDevops" ]; then
+            echo "running ado to gh migration"
+          fi
+
+
+        
