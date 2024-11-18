@@ -52,12 +52,12 @@ jobs:
         run: cat $GITHUB_ENV
 
       - name: Run Bitbucket to GitHub
-        
-        if: ${{ env.source_system == 'Bitbucket' }}
+    #   if: env.NEED != 'true'
+        if: env.source_system == 'Bitbucket'
         run: |
           echo "running bb to gh migration"
 
       - name: Run Azure DevOps to GitHub migration
-        if: ${{ env.source_system == 'AzureDevops' }}
+        if: env.source_system == 'AzureDevops'
         run: |
           echo "running ado to gh migration"
