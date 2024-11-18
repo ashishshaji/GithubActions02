@@ -68,16 +68,12 @@ jobs:
           done
 
       - name: run bitbucket to github
+        if: ${{ env.Repo1_source_system == 'Bitbucket' }}
         run: |
           echo $source_system
           if [ "$source_system" = "Bitbucket" ]; then
             echo "running bb to gh migration"
           fi
-        
-      - name: run bitbucket to github01
-         echo env.source_system
-        run: |
-          echo "running bb to gh migration01"
 
       - name: run azure devops to github migartion
         run: |
