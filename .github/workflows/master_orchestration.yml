@@ -72,9 +72,8 @@ jobs:
           echo "running gh to gh enterprise migration"  
 
       - name: Run Jenkins migration
-        if: env.Validate_Jenkins_Migration == 'Y'
         run: |
             echo "running Jenkins migration"    
             
       - name: Print specific environment variables from JSON
-        run: echo env
+        run: echo $env
