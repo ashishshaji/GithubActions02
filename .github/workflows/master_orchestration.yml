@@ -18,7 +18,7 @@ jobs:
               "Migration_story": "https://www.jira-dummy.com/project1/story1", 
               "Migration_wave": "wave1", 
               "Validate_Repo_Migration": "Y", 
-              "Jenkins_Migration": "Y", 
+              "Validate_Jenkins_Migration": "Y", 
               "Jenkins_Job": { 
                 "Jenkins_Job_Path": "https://www.jenkins-dummy.com/project1", 
                 "Jenkins_Job_Name": ["CI_Job1", "CI_Job2", "CI_Job3"] 
@@ -53,8 +53,10 @@ jobs:
       - name: Read JSON and set environment variables
         run: |
           json_file="config.json"
-          Source_System=$(jq -r '.Repo1.Source_System' "$json_file")
-          echo "Source_System=$Source_System" >> $GITHUB_ENV
+          jq -r '.Repo | to_entries | .[] | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line;
+           do
+            echo "$line" >> $GITHUB_ENV
+          done
 
       - name: Run Bitbucket to GitHub
         if: env.Source_System == 'Bitbucket'
@@ -72,9 +74,9 @@ jobs:
           echo "running gh to gh enterprise migration"  
 
       - name: Run Jenkins migration
-        if: env.Source_System == 'Bitbucket'
+        if: env.Validate_Jenkins_Migration == 'Y'
         run: |
             echo "running Jenkins migration"    
             
       - name: Print specific environment variables from JSON
-        run: echo $Jenkins_Migration
+        run: echo $Validate_Jenkins_Migration
