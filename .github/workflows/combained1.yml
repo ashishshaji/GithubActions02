@@ -58,17 +58,23 @@ jobs:
       - name: Display JSON file
         run: cat config.json
 
-      - name: Read JSON
+      - name: Read JSON and set environment variables
         id: read_json
         run: |
           json_file="config.json"
+          # Iterate over all keys in the JSON and create environment variables
+          jq -r '.Repo1 | to_entries | .[] | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
+            echo "$line" >> $GITHUB_ENV
+          done
 
-          # Iterate over all keys in the JSON and print their values
-          jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' "$json_file" |
-           while 
-            IFS= read -r line; do echo "$line" >> $GITHUB_ENV 
-           done
+      - name: Print specific environment variables from JSON
+        run: cat $GITHUB_ENV
 
-      - name: Print specific environment variables 
-        run: | 
-            cat $GITHUB_ENV
+      - name: Conditional execution based on source system
+        run: |
+          echo $source_system
+          if [ "$source_system" = "Bitbucket" ]; then
+            echo "running bb"
+          else
+            echo "source_system is not Bitbucket"
+          fi
