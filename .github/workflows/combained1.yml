@@ -68,7 +68,7 @@ jobs:
           done
 
       - name: run bitbucket to github
-        if: ${{ env.Repo1_source_system == 'Bitbucket' }}
+        if: ${{ env.Repo_source_system == 'Bitbucket' }}
         run: |
           echo $source_system
           if [ "$source_system" = "Bitbucket" ]; then
