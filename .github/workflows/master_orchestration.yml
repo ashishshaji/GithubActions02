@@ -77,4 +77,4 @@ jobs:
             echo "running Jenkins migration"    
             
       - name: Print specific environment variables from JSON
-        run: cat $GITHUB_ENV
+        run: echo env
