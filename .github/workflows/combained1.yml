@@ -69,6 +69,7 @@ jobs:
 
       - name: run bitbucket to github
          echo env
+         echo env.source_system
         run: |
           echo $source_system
           if [ "$source_system" = "Bitbucket" ]; then
