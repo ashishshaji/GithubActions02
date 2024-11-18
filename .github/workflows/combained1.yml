@@ -1,14 +1,17 @@
 name: Config File Workflow
+
 on:
   push:
     branches:
       - test1
+
 jobs:
   generate-config:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Generate JSON file
         run: >
           echo '{ 
@@ -29,44 +32,41 @@ jobs:
               "phone": "555-555-5555" 
             } 
           }' > config.json
+
       - name: Display JSON file
         run: cat config.json
+
       - name: Upload JSON artifact
         uses: actions/upload-artifact@v4
         with:
           name: config-json
           path: config.json
+
   master-config:
     needs: generate-config
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Download JSON artifact
         uses: actions/download-artifact@v4
         with:
           name: config-json
           path: .
-      - name: display JSON file
+
+      - name: Display JSON file
         run: cat config.json
+
       - name: Read JSON
         id: read_json
-        run: >
+        run: |
           json_file="config.json"
 
-          repo=$(cat $json_file | jq -r '.repo')
+          for key in $(jq -r 'to_entries|map("\(.key)")|.[]' "$json_file"); do 
+            value=$(jq -r --arg k "$key" '.[$k]' "$json_file") 
+            echo "${key}=${value}" >> $GITHUB_ENV 
+          done
 
-          source_system1=$(jq -r '.Repo1.source_system' "$json_file") 
-
-          validate_jenkins_migration1=$(jq -r '.Repo1.Validate_Jenkins_Migration' "$json_file") 
-
-          echo "Repo: $repo"
-
-          echo "source_system1=$source_system1" >> $GITHUB_ENV
-
-          echo "validate_jenkins_migration1=$validate_jenkins_migration1" >> $GITHUB_ENV
-
-          for key in $(jq -r 'to_entries|map("\(.key)")|.[]' "$json_file"); do value=$(jq -r --arg k "$key" '.[$k]' "$json_file") echo "${key}=${value}" >> $GITHUB_ENV done 
-      - name: Print all environment variables 
+      - name: Print all environment variables
         run: printenv
-
