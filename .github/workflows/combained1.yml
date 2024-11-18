@@ -68,15 +68,15 @@ jobs:
           done
 
       - name: run bitbucket to github
-        if: env.source_system == 'BitBucket'
+        if: env.source_system == 'Bitbucket'
         run: |
             echo "running bb to gh migration"
 
       - name: Display Environment Variables 
 
         run: | 
-         echo "Source System: ${env.source_system}" 
-         echo "Bitbucket Repo: ${ env.Bitbucket_Repo }" 
+         echo "Source System: $source_system" 
+         echo "Bitbucket Repo: $env.Bitbucket_Repo" 
 
     #   - name: run azure devops to github migartion
     #     run: |
