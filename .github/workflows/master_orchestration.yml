@@ -61,7 +61,17 @@ jobs:
         run: |
             echo "running bb to gh migration"
   
-      - name: Run Azure DevOps to GitHub migration
+      - name: Run ADO to GitHub migration
         if: env.source_system == 'AzureDevops'
         run: |
-         echo "running ado to gh migration"     
+         echo "running ado to gh migration"  
+
+      - name: Run github to Github enterprise migration
+        if: env.source_system == 'Github'
+        run: |
+          echo "running gh to gh enterprise migration"  
+
+      - name: Run Jenkins migration
+        if: env.validate_jenkins_migration == 'Y'
+        run: |
+            echo "running Jenkins migration"      
