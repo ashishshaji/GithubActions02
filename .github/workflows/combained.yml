@@ -56,15 +56,15 @@ jobs:
 
           repo=$(cat $json_file | jq -r '.repo')
 
-          source_system=$(jq -r '.Repo1.source_system' "$json_file") >> $GITHUB_ENV
+          source_system=$(jq -r '.Repo1.source_system' "$json_file") 
 
-          validate_jenkins_migration=$(jq -r '.Repo1.Validate_Jenkins_Migration' "$json_file") >> $GITHUB_ENV
+          validate_jenkins_migration=$(jq -r '.Repo1.Validate_Jenkins_Migration' "$json_file") 
 
-          # echo "Repo: $repo"
+          echo "Repo: $repo"
 
-          # echo "source_system=$source_system" >> $GITHUB_ENV
+          echo "source_system=$source_system" >> $GITHUB_ENV
 
-          # echo "validate_jenkins_migration=$validate_jenkins_migration" >> $GITHUB_ENV
+          echo "validate_jenkins_migration=$validate_jenkins_migration" >> $GITHUB_ENV
       - name: execute bitbucket migration
         run: |
           echo $source_system
