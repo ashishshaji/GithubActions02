@@ -1,10 +1,12 @@
 name: kkk
 
 on:
-   workflow_dispatch:
-    inputs: 
-        name: text
-        required: true
+    workflow_dispatch:
+      inputs:
+        source_system:
+          description: 'Source System'
+          required: true
+          default: 'hai'
 
 jobs:
   generate-config:
