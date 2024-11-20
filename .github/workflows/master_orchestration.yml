@@ -59,22 +59,27 @@ jobs:
             echo "$line" >> $GITHUB_ENV
           done
 
-      - name: Run Bitbucket to GitHub
+      - name: workflow for migrate Bitbucket to GitHub
         if: env.Source_System == 'Bitbucket'
         run: |
-            echo "running bb to gh migration"
+            echo running bb2gh migrator
   
-      - name: Run ADO to GitHub migration
+      - name: workflow for migrate ADO to GitHub migration
         if: env.Source_System == 'AzureDevops'
         run: |
-         echo "running ado to gh migration"  
+         echo running ado to gh migrator
 
-      - name: Run github to Github enterprise migration
+      - name: workflow for migrate github to Github enterprise migration
         if: env.Source_System == 'Github'
         run: |
-          echo "running gh to gh enterprise migration"  
+          echo "running gh to ghe migrator"
 
-      - name: Run Jenkins migration
+      - name: Workflow for migrate github orgniazition to another github organization
+        if: env.Migrate_GHO=='Y'
+        run: |
+           echo migrating GH org to another GH org
+
+      - name: workflow for Jenkins migration
         if: env.Validate_Jenkins_Migration == 'Y'
         run: |
             echo "running Jenkins migration"    
