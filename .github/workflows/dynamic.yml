@@ -1,9 +1,7 @@
 name: kkk
 
 on:
-   workflow_dispatch
-#   push:
-#     branches:
+   workflow_dispatch:
     inputs: 
         name: text
         required: true
