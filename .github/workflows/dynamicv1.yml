@@ -35,30 +35,31 @@ jobs:
               "phone": "555-555-5555" 
             } 
           }' > config.json
-
       - name: Display JSON file
         run: cat config.json
 
       - name: Iterating JSON and set environment variables
-        id: set-output
         run: |
           json_file="config.json"
           jq -r '.Repo1 | to_entries[]? | select(.value!=null) | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
             echo "$line" >> $GITHUB_ENV
-            if [[ "$line" =~ ^Source_System=.* ]]; then
-              Source_System="${line#*=}"
-              if [ "$Source_System" == "Bitbucket" ]; then
-                echo "source_system=bb" >> $GITHUB_ENV
-                echo "destination_system=gh" >> $GITHUB_ENV
-              elif [ "$Source_System" == "AzureDevops" ]; then
-                echo "source_system=ado" >> $GITHUB_ENV
-                echo "destination_system=gh" >> $GITHUB_ENV
-              elif [ "$Source_System" == "gh" ]; then
-                echo "source_system=gh" >> $GITHUB_ENV
-                echo "destination_system=ghE" >> $GITHUB_ENV
-              fi
-            fi
           done
+      - name: Read JSON and set environment variables
+        id: set-output
+        run: |
+          echo "source system :" $Source_System
+          Source_System=$(jq -r '.Repo1.Source_System' config.json)
+          echo "::set-output name=Source_System::$Source_System"
+          if [ "$Source_System" == "Bitbucket" ]; then
+            echo "::set-output name=source_system::bb"
+            echo "::set-output name=destination_system::gh"
+          elif [ "$Source_System" == "AzureDevops" ]; then
+            echo "::set-output name=source_system::ado"
+            echo "::set-output name=destination_system::gh"
+          elif [ "$Source_System" == "gh" ]; then
+            echo "::set-output name=source_system::gh"
+            echo "::set-output name=destination_system::ghE"
+          fi
 
   master-workflow:
     runs-on: ubuntu-latest
@@ -66,12 +67,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Echo dynamic values
+      - name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
         run: |
-          if [ -z "${{ needs.generate-config.outputs.source_system }}" ] || [ -z "${{ needs.generate-config.outputs.destination_system }}" ]; then
-            echo "One or more required variables are null. Exiting..."
-            exit 1
-          else
-            echo "running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
-          fi
+          echo "running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
