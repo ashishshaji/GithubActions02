@@ -70,7 +70,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Echo hello world
+      - name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}
         run: |
           echo "Hello, World!"
           echo "Source System: ${{ needs.generate-config.outputs.source_system }}"
