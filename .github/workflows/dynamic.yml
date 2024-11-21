@@ -45,15 +45,12 @@ jobs:
             echo "$line" >> $GITHUB_ENV
           done
       - name: Read JSON and set environment variables
+         echo $Source_System
         run: |
-          if [ "$SOURCE_SYSTEM" == "Bitbucket" ]; then
-              # echo "::set-output name=Source_System::bb"
-              echo "source_system=bb" >> $GITHUB_ENV
-              echo $source_system
+         echo "::set-output name=Source_System::$Source_System"
 
-          elif [ "$SOURCE_SYSTEM" == "ADO" ]; then
-            echo "::set-output name=Source_System::ado"
-          fi
+
+
 
 
 
