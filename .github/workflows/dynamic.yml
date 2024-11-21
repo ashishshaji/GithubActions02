@@ -73,6 +73,10 @@ jobs:
          if [ "$Source_System" == "Bitbucket" ]; then
           echo "::set-output name=source_system::bb"
           echo ":: set-output name=destination_system::gh"
+          elif [ "$Source_System" == "ADO" ]; then
+            echo "::set-output name=source_system::ado"
+            echo "::set-output name=destination_system::gh"
+              
          fi
 
       
