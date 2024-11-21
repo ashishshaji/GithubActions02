@@ -38,19 +38,12 @@ jobs:
       - name: Display JSON file
         run: cat config.json
         
-      - name: Read JSON and set environment variables
+      - name: set environment variables
         run: |
           json_file="config.json"
           jq -r '.Repo1 | to_entries[]? | select(.value!=null) | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
             echo "$line" >> $GITHUB_ENV
           done
-
-      - name: Read JSON and set environment variables
-        id: set-output
-        run: |
-          json_file="config.json"
-          echo "::set-output name=Source_System::$Source_System"
-
       - name: Read JSON and set environment variables
         run: |
           if [ "$SOURCE_SYSTEM" == "Bitbucket" ]; then
