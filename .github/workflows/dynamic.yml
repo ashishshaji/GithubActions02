@@ -37,7 +37,7 @@ jobs:
 
       - name: Display JSON file
         run: cat config.json
-
+        
       - name: Read JSON and set environment variables
         run: |
           json_file="config.json"
@@ -49,7 +49,7 @@ jobs:
         id: set-output
         run: |
           json_file="config.json"
-          Source_System=env.Source_System 
+          echo $Source_System
           echo "::set-output name=Source_System::$Source_System"
 
   master-workflow:
@@ -59,7 +59,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Read source system
+      - name: Echo hello world
         run: |
           echo "Hello, World!"
           echo "Source System: ${{ needs.generate-config.outputs.source_system }}"
