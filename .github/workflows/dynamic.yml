@@ -50,6 +50,9 @@ jobs:
           echo "source system :" $Source_System
           Source_System=$Source_System
           echo "::set-output name=Source_System::$Source_System"
+          if [ "$Source_System" == "Bitbucket" ]; then
+            echo "::set-output name=source_system::bb"
+          fi
 
 
       
