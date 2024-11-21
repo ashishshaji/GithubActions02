@@ -46,23 +46,36 @@ jobs:
             echo "$line" >> $GITHUB_ENV
           done
 
+      # - name: Read JSON and set environment variables
+      #   id: set-output
+      #   run: |
+      #     json_file="config.json"
+      #     jq -r '.Repo1 | to_entries[]? | select(.value!=null) | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
+      #       echo "$line" >> $GITHUB_ENV
+      #       if [[ "$line" =~ ^Source_System=.* ]]; then
+      #         Source_System="${line#*=}"
+      #         if [ "$Source_System" == "Bitbucket" ]; then
+      #           echo "::set-output name=source_system::bb"
+      #           echo "::set-output name=destination_system::gh"
+      #         elif [ "$Source_System" == "ADO" ]; then
+      #           echo "::set-output name=source_system::ado"
+      #           echo "::set-output name=destination_system::gh"
+      #         fi
+      #       fi
+      #     done
+
       - name: Read JSON and set environment variables
         id: set-output
         run: |
-          json_file="config.json"
-          jq -r '.Repo1 | to_entries[]? | select(.value!=null) | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
-            echo "$line" >> $GITHUB_ENV
-            if [[ "$line" =~ ^Source_System=.* ]]; then
-              Source_System="${line#*=}"
-              if [ "$Source_System" == "Bitbucket" ]; then
-                echo "::set-output name=source_system::bb"
-                echo "::set-output name=destination_system::gh"
-              elif [ "$Source_System" == "ADO" ]; then
-                echo "::set-output name=source_system::ado"
-                echo "::set-output name=destination_system::gh"
-              fi
-            fi
-          done
+         echo "source system :" $Source_System
+         Source_System=$Source_System
+          echo "::set-output name=Source_System::$Source_System"
+         if [ "$Source_System" == "Bitbucket" ]; then
+          echo "::set-output name=source_system::bb"
+          echo ":: set-output name=destination_system::gh"
+         fi
+
+      
 
   call-second-workflow:
     runs-on: ubuntu-latest
