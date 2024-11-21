@@ -47,9 +47,8 @@ jobs:
       - name: Read JSON and set environment variables
         id: set-output
         run: |
-          echo $Source_System
-          json_file="config.json"
-          Source_System=$(jq -r '.Repo1.Source_System' "$json_file")
+          echo "source system :" $Source_System
+          Source_System=$Source_System
           echo "::set-output name=Source_System::$Source_System"
 
 
