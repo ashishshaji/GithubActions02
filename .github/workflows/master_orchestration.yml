@@ -3,7 +3,7 @@ name: Config File Workflow
 on:
   push:
     branches:
-      - working
+      -working
 
 jobs:
   generate-config:
