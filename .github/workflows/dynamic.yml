@@ -47,7 +47,10 @@ jobs:
       - name: Read JSON and set environment variables
         run: |
           if [ "$SOURCE_SYSTEM" == "Bitbucket" ]; then
-              echo "::set-output name=Source_System::bb"
+              # echo "::set-output name=Source_System::bb"
+              echo "source_system=bb" >> $GITHUB_ENV
+              echo $source_system
+
           elif [ "$SOURCE_SYSTEM" == "ADO" ]; then
             echo "::set-output name=Source_System::ado"
           fi
