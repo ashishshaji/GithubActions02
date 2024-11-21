@@ -35,6 +35,7 @@ jobs:
               "phone": "555-555-5555" 
             } 
           }' > config.json
+
       - name: Display JSON file
         run: cat config.json
 
@@ -70,8 +71,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}
+      - name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
         run: |
-          echo "Hello, World!"
-          echo "Source System: ${{ needs.generate-config.outputs.source_system }}"
-          echo "Destination System: ${{ needs.generate-config.outputs.destination_system }}"
+          echo "running ${{ needs.generate-config.outputs.source_system }} 2 ${{ needs.generate-config.outputs.destination_system }}"
+          
