@@ -3,7 +3,7 @@ name: Unified Config Workflow
 on:
   push:
     branches:
-      - dynamic-wf
+      -dynamic-wf
 
 jobs:
   generate-config:
@@ -88,8 +88,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
-    - if: ${{ needs.generate-config.outputs.source_system != '' && needs.generate-config.outputs.destination_system != '' }}
-      name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
+    - name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
       run: |
         echo "running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
