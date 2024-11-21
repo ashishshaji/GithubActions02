@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       source_system: ${{ steps.set-output.outputs.Source_System }}
+      destination_system: ${{steps.set-output.outputs.destination_system}}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -52,6 +53,7 @@ jobs:
           echo "::set-output name=Source_System::$Source_System"
           if [ "$Source_System" == "Bitbucket" ]; then
             echo "::set-output name=source_system::bb"
+            echo ":: set-output name=destination_system::gh"
           fi
 
 
@@ -67,3 +69,4 @@ jobs:
         run: |
           echo "Hello, World!"
           echo "Source System: ${{ needs.generate-config.outputs.source_system }}"
+          echo "destination System: ${{ needs.generate-config.outputs.destination_system }}"
