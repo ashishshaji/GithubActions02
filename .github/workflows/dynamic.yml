@@ -49,8 +49,17 @@ jobs:
         id: set-output
         run: |
           json_file="config.json"
-          echo $Source_System
           echo "::set-output name=Source_System::$Source_System"
+
+      - name: Read JSON and set environment variables
+        run: |
+          if [ "$SOURCE_SYSTEM" == "Bitbucket" ]; then
+              echo "::set-output name=Source_System::bb"
+          elif [ "$SOURCE_SYSTEM" == "ADO" ]; then
+            echo "::set-output name=Source_System::ado"
+          fi
+
+
 
   master-workflow:
     runs-on: ubuntu-latest
