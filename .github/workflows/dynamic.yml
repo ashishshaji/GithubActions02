@@ -3,7 +3,7 @@ name: Unified Config Workflow
 on:
   push:
     branches:
-      - dynamic-wf
+      -dynamic-wf
 
 jobs:
   generate-config:

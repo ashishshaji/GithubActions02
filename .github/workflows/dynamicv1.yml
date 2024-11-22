@@ -3,7 +3,7 @@ name: Unified Config Workflow 1
 on:
   push:
     branches:
-      -dynamic-wf
+      - dynamic-wf
 
 jobs:
   generate-config:
@@ -51,14 +51,16 @@ jobs:
         id: set-output
         run: |
          if [ "$Source_System" == "Bitbucket" ]; then
-          echo "::set-output name=src_system::bb"
-          echo "::set-output name=dest_system::gh"
+            echo "src_system=bb" >> $GITHUB_OUTPUT
+            echo "dest_system=gh" >> $GITHUB_OUTPUT
           elif [ "$Source_System" == "AzureDevops" ]; then
-            echo "::set-output name=src_system::ado"
-            echo "::set-output name=dest_system::gh"
+            echo "src_system=ado" >> $GITHUB_OUTPUT
+            echo "dest_system=gh" >> $GITHUB_OUTPUT
           elif [ "$Source_System" == "gh" ]; then
-            echo "::set-output name=src_system::gh"
-            echo "::set-output name=dest_system::ghE"   
+            echo "src_system=gh" >> $GITHUB_OUTPUT
+            echo "dest_system=ghE" >> $GITHUB_OUTPUT  
+          elif [ "$Validate_Jenkins_Migration" == "Y" ]; then
+            echo "Migration_Validator=Jenkins" >> $GITHUB_OUTPUT   
             
          fi
 
@@ -68,10 +70,15 @@ jobs:
   master-workflow:
     runs-on: ubuntu-latest
     needs: generate-config
+    
+    env:
+      SOURCE_SYSTEM: ${{ needs.generate-config.outputs.src_system }}
+      DEST_SYSTEM: ${{ needs.generate-config.outputs.dest_system }}
     steps:
-      - name: Check Environment Variables
+      - name: Check Environment Variables for migration
+
         run: |
-          if [ -z "${{ needs.generate-config.outputs.src_system  }}" ] || [ -z "${{ needs.generate-config.outputs.dest_system }}" ]; then
+          if [ -z $SOURCE_SYSTEM ] || [ -z $DEST_SYSTEM ]; then
            echo "One or both environment variables (SOURCE_SYSTEM, DESTINATION_SYSTEM) are not set. Exiting workflow."
           exit 1
           fi
@@ -79,9 +86,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: ${{ needs.generate-config.outputs.src_system }} to ${{ needs.generate-config.outputs.dest_system }}
+      - name: ${{ env.SOURCE_SYSTEM }} to ${{ env.DEST_SYSTEM }}
         run: |
-          echo "Running ${{ needs.generate-config.outputs.source_system }}  to ${{ needs.generate-config.outputs.destination_system }}"
+          echo "Running $SOURCE_SYSTEM  to $DEST_SYSTEM
 
 
 
