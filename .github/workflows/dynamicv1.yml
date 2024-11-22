@@ -88,7 +88,7 @@ jobs:
 
       - name: ${{ env.SOURCE_SYSTEM }} to ${{ env.DEST_SYSTEM }}
         run: |
-          echo "Running $SOURCE_SYSTEM  to $DEST_SYSTEM
+          echo Running $SOURCE_SYSTEM  to $DEST_SYSTEM
 
 
 
