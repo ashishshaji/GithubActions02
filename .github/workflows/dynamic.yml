@@ -103,7 +103,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: $src_system to $dest_system Migration
+      - name: ${src_system} to ${ dest_system }
         run: |
           echo $dest_system 
           echo $src_system
