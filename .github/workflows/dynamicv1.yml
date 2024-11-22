@@ -46,13 +46,10 @@ jobs:
           jq -r '.Repo1 | to_entries[]? | select(.value!=null) | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
             echo "$line" >> $GITHUB_ENV
           done
-          
+
       - name: Read JSON and set environment variables
         id: set-output
         run: |
-         echo "source system :" $Source_System
-         Source_System=$Source_System
-          echo "::set-output name=Source_System::$Source_System"
          if [ "$Source_System" == "Bitbucket" ]; then
           echo "::set-output name=src_system::bb"
           echo "::set-output name=dest_system::gh"
@@ -82,13 +79,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}
+      - name: ${{ needs.generate-config.outputs.src_system }} to ${{ needs.generate-config.outputs.dest_system }}
         run: |
           echo "Running ${{ needs.generate-config.outputs.source_system }}  to ${{ needs.generate-config.outputs.destination_system }}"
 
 
 
-      # - if: needs.generate-config.outputs.source_system !=' ' && needs.generate-config.outputs.destination_system !=' '
-      #   name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
-      #   run: |
-      #     echo "Running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
+    
