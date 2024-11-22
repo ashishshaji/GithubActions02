@@ -9,8 +9,8 @@ jobs:
   generate-config:
     runs-on: ubuntu-latest
     outputs:
-      source_system: ${{ steps.set-output.outputs.source_system }}
-      destination_system: ${{ steps.set-output.outputs.destination_system }}
+      src_system: ${{ steps.set-output.outputs.src_system }}
+      dest_system: ${{ steps.set-output.outputs.dest_system }}
       Migration_Validator: ${{ steps.set-output.outputs.migration_validator }}
     steps:
       - name: Checkout repository
@@ -91,7 +91,7 @@ jobs:
     steps:
       - name: Check Environment Variables
         run: |
-          if [ -z "${{ needs.generate-config.outputs.source_system  }}" ] || [ -z "${{ needs.generate-config.outputs.destination_system }}" ]; then
+          if [ -z "${{ needs.generate-config.outputs.src_system  }}" ] || [ -z "${{ needs.generate-config.outputs.dest_system }}" ]; then
            echo "One or both environment variables (SOURCE_SYSTEM, DESTINATION_SYSTEM) are not set. Exiting workflow."
           exit 1
           fi
@@ -99,9 +99,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
+      - name: ${{ needs.generate-config.outputs.src_system }} to ${{ needs.generate-config.outputs.dest_system }} Migration
         run: |
-          echo "Running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
+          echo "Running ${{ needs.generate-config.outputs.src_system }} to ${{ needs.generate-config.outputs.dest_system }}"
 
 
 
