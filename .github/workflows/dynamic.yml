@@ -73,6 +73,7 @@ jobs:
           echo "::set-output name=Source_System::$Source_System"
          if [ "$Source_System" == "Bitbucket" ]; then
           echo "::set-output name=source_system::bb"
+          echo "::set-output name=destination_system::gh"
           elif [ "$Source_System" == "AzureDevops" ]; then
             echo "::set-output name=source_system::ado"
             echo "::set-output name=destination_system::gh"
@@ -94,6 +95,9 @@ jobs:
           if [ -z "${{ needs.generate-config.outputs.src_system  }}" ] || [ -z "${{ needs.generate-config.outputs.dest_system }}" ]; then
            echo "One or both environment variables (SOURCE_SYSTEM, DESTINATION_SYSTEM) are not set. Exiting workflow."
           exit 1
+          else 
+            echo "src_system="${{ needs.generate-config.outputs.src_system }}" >> $GITHUB_ENV
+            echo "dest_system="${{ needs.generate-config.outputs.src_system }}" >> $GITHUB_ENV
           fi
 
       - name: Checkout repository
@@ -101,6 +105,8 @@ jobs:
 
       - name: ${{ needs.generate-config.outputs.src_system }} to ${{ needs.generate-config.outputs.dest_system }} Migration
         run: |
+          echo $dest_system 
+          echo $src_system
           echo "Running ${{ needs.generate-config.outputs.src_system }} to ${{ needs.generate-config.outputs.dest_system }}"
 
 
