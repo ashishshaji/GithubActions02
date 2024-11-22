@@ -1,9 +1,9 @@
-name: Unified Config Workflow
+name: Unified Config Workflow 1
 
 on:
   push:
     branches:
-      - dynamic-wf
+      -dynamic-wf
 
 jobs:
   generate-config:

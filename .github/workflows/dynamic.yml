@@ -72,11 +72,11 @@ jobs:
             echo "src_system=bb" >> $GITHUB_OUTPUT
             echo "dest_system=gh" >> $GITHUB_OUTPUT
           elif [ "$Source_System" == "AzureDevops" ]; then
-            echo "::set-output name=src_system::ado"
-            echo "::set-output name=dest_system::gh"
+            echo "src_system=ado" >> $GITHUB_OUTPUT
+            echo "dest_system=gh" >> $GITHUB_OUTPUT
           elif [ "$Source_System" == "gh" ]; then
-            echo "::set-output name=src_system::gh"
-            echo "::set-output name=dest_system::ghE"   
+            echo "src_system=gh" >> $GITHUB_OUTPUT
+            echo "dest_system=ghE" >> $GITHUB_OUTPUT 
             
          fi
 
