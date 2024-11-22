@@ -79,7 +79,7 @@ jobs:
 
         run: |
           if [ -z $SOURCE_SYSTEM ] || [ -z $DEST_SYSTEM ]; then
-           echo "One or both environment variables (SOURCE_SYSTEM, DESTINATION_SYSTEM) are not set. Exiting workflow."
+           echo "One or both environment variables (SOURCE_SYSTEM, DESTINATION_SYSTEM) are not set. Exiting workflow.
           exit 1
           fi
 
