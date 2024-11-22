@@ -44,6 +44,13 @@ jobs:
           jq -r '.Repo1 | to_entries[]? | select(.value!=null) | "\(.key)=\(.value)"' "$json_file" | while IFS= read -r line; do
             echo "$line" >> $GITHUB_ENV
           done
+          
+      - name: Upload JSON artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: config-json
+          path: config.json
+
       - name: Read JSON and set environment variables
         id: set-output
         run: |
