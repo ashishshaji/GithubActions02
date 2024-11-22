@@ -72,7 +72,6 @@ jobs:
          Source_System=$Source_System
           echo "::set-output name=Source_System::$Source_System"
          if [ "$Source_System" == "Bitbucket" ]; then
-          echo "::set-output name=source_system:: "
           echo "::set-output name=destination_system::gh"
           elif [ "$Source_System" == "AzureDevops" ]; then
             echo "::set-output name=source_system::ado"
