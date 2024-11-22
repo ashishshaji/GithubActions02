@@ -96,8 +96,8 @@ jobs:
            echo "One or both environment variables (SOURCE_SYSTEM, DESTINATION_SYSTEM) are not set. Exiting workflow."
           exit 1
           else 
-            echo "src_system="${{ needs.generate-config.outputs.src_system }}" >> $GITHUB_ENV
-            echo "dest_system="${{ needs.generate-config.outputs.src_system }}" >> $GITHUB_ENV
+            echo "src_system=${{ needs.generate-config.outputs.src_system }}" >> $GITHUB_ENV
+            echo "dest_system=${{ needs.generate-config.outputs.dest_system }}" >> $GITHUB_ENV
           fi
 
       - name: Checkout repository
