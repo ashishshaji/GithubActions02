@@ -3,14 +3,15 @@ name: Unified Config Workflow
 on:
   push:
     branches:
-      -dynamic-wf
+      - dynamic-wf
 
 jobs:
   generate-config:
     runs-on: ubuntu-latest
     outputs:
-      source_system: ${{ steps.set-output.outputs.source_system }}
-      destination_system: ${{ steps.set-output.outputs.destination_system }}
+      src_system: ${{ steps.set-output.outputs.src_system }}
+      dest_system: ${{ steps.set-output.outputs.dest_system }}
+      Migration_Validator: ${{ steps.set-output.outputs.migration_validator }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,6 +36,7 @@ jobs:
               "phone": "555-555-5555" 
             } 
           }' > config.json
+
       - name: Display JSON file
         run: cat config.json
 
@@ -45,35 +47,48 @@ jobs:
             echo "$line" >> $GITHUB_ENV
           done
           
-      - name: Upload JSON artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: config-json
-          path: config.json
-
       - name: Read JSON and set environment variables
         id: set-output
         run: |
-          echo "source system :" $Source_System
-          Source_System=$(jq -r '.Repo1.Source_System' config.json)
+         echo "source system :" $Source_System
+         Source_System=$Source_System
           echo "::set-output name=Source_System::$Source_System"
-          if [ "$Source_System" == "Bitbucket" ]; then
-            echo "::set-output name=source_system::bb"
-            echo "::set-output name=destination_system::gh"
+         if [ "$Source_System" == "Bitbucket" ]; then
+          echo "::set-output name=src_system::bb"
+          echo "::set-output name=dest_system::gh"
           elif [ "$Source_System" == "AzureDevops" ]; then
-            echo "::set-output name=source_system::ado"
-            echo "::set-output name=destination_system::gh"
+            echo "::set-output name=src_system::ado"
+            echo "::set-output name=dest_system::gh"
           elif [ "$Source_System" == "gh" ]; then
-            echo "::set-output name=source_system::gh"
-            echo "::set-output name=destination_system::ghE"
-          fi
+            echo "::set-output name=src_system::gh"
+            echo "::set-output name=dest_system::ghE"   
+            
+         fi
+
+
+
 
   master-workflow:
     runs-on: ubuntu-latest
     needs: generate-config
     steps:
+      - name: Check Environment Variables
+        run: |
+          if [ -z "${{ needs.generate-config.outputs.src_system  }}" ] || [ -z "${{ needs.generate-config.outputs.dest_system }}" ]; then
+           echo "One or both environment variables (SOURCE_SYSTEM, DESTINATION_SYSTEM) are not set. Exiting workflow."
+          exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
+
+      - name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}
         run: |
-          echo "running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
+          echo "Running ${{ needs.generate-config.outputs.source_system }}  to ${{ needs.generate-config.outputs.destination_system }}"
+
+
+
+      # - if: needs.generate-config.outputs.source_system !=' ' && needs.generate-config.outputs.destination_system !=' '
+      #   name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
+      #   run: |
+      #     echo "Running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
