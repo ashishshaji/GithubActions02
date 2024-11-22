@@ -103,11 +103,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: ${{ needs.generate-config.outputs.src_system }} to ${{ needs.generate-config.outputs.dest_system }} Migration
+      - name: $src_system to $dest_system Migration
         run: |
           echo $dest_system 
           echo $src_system
-          echo "Running ${{ needs.generate-config.outputs.src_system }} to ${{ needs.generate-config.outputs.dest_system }}"
+          echo "Running $src_system to $dest_system"
 
 
 
