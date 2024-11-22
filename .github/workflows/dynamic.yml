@@ -92,7 +92,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - if: ${{ needs.generate-config.outputs.source_system }} =='bb'
+      - if: ${{ needs.generate-config.outputs.source_system }} =='kk'
         name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
         run: |
           echo "Running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
