@@ -73,7 +73,7 @@ jobs:
           echo "::set-output name=Source_System::$Source_System"
          if [ "$Source_System" == "Bitbucket" ]; then
           echo "::set-output name=source_system::bb"
-          echo ":: set-output name=destination_system::gh"
+          echo "::set-output name=destination_system::gh"
           elif [ "$Source_System" == "AzureDevops" ]; then
             echo "::set-output name=source_system::ado"
             echo "::set-output name=destination_system::gh"
@@ -90,14 +90,24 @@ jobs:
     runs-on: ubuntu-latest
     needs: generate-config
     steps:
+      - name: Check Environment Variables
+        run: |
+          echo $env.SOURCE_SYSTEM
+          if [ -z "${{ needs.generate-config.outputs.source_system  }}" ] || [ -z "${{ needs.generate-config.outputs.destination_system }}" ]; then
+           echo "One or both environment variables (SOURCE_SYSTEM, DESTINATION_SYSTEM) are not set. Exiting workflow."
+          exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - if: needs.generate-config.outputs.source_system =='bb'
-        name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
+      - name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
         run: |
           echo "Running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
 
-      - if: needs.generate-config.outputs.source_system !=' '
-        name: ashish
-        run: echo "hello world"
+
+
+      # - if: needs.generate-config.outputs.source_system !=' ' && needs.generate-config.outputs.destination_system !=' '
+      #   name: ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }} Migration
+      #   run: |
+      #     echo "Running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
