@@ -72,14 +72,14 @@ jobs:
          Source_System=$Source_System
           echo "::set-output name=Source_System::$Source_System"
          if [ "$Source_System" == "Bitbucket" ]; then
-          echo "::set-output name=source_system::bb"
-          echo "::set-output name=destination_system::gh"
+          echo "::set-output name=src_system::bb"
+          echo "::set-output name=dest_system::gh"
           elif [ "$Source_System" == "AzureDevops" ]; then
-            echo "::set-output name=source_system::ado"
-            echo "::set-output name=destination_system::gh"
+            echo "::set-output name=src_system::ado"
+            echo "::set-output name=dest_system::gh"
           elif [ "$Source_System" == "gh" ]; then
-            echo "::set-output name=source_system::gh"
-            echo "::set-output name=destination_system::ghE"   
+            echo "::set-output name=src_system::gh"
+            echo "::set-output name=dest_system::ghE"   
             
          fi
 
