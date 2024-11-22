@@ -98,6 +98,6 @@ jobs:
         run: |
           echo "Running ${{ needs.generate-config.outputs.source_system }} to ${{ needs.generate-config.outputs.destination_system }}"
 
-      - if: needs.generate-config.outputs.source_system =='kk'
+      - if: needs.generate-config.outputs.source_system !=' '
         name: ashish
         run: echo "hello world"
