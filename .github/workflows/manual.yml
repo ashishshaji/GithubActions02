@@ -1,4 +1,4 @@
-name: Log Inputs Workflow
+name: manual-workflow
 
 on:
   workflow_dispatch:
