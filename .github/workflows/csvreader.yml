@@ -1,0 +1,25 @@
+name:  CSV creator
+
+on:
+  push:
+    branches:
+      - csv-reader
+  workflow_dispatch:
+    inputs:
+      task_ids:
+        description: 'Comma-separated list of JIRA task IDs'
+        required: true
+        default: '10001,10002'
+
+jobs:
+  csvreader_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create CSV with JIRA task IDs
+        run: echo -e "JIRA_TASK_IDS\n${{ github.event.inputs.task_ids }}" | tr ',' '\n' > jira_task_ids.csv
+
+      - name: Display CSV content
+        run: cat jira_task_ids.csv
