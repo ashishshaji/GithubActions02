@@ -19,7 +19,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Create CSV with JIRA task IDs
-        run: echo -e "JIRA_TASK_IDS\n${{ github.event.inputs.task_ids }}" | tr ',' '\n' > jira_task_ids.csv
-
+        run: | 
+           echo "JIRA_TASK_IDS" > jira_task_ids.csv
+           echo "${{ github.event.inputs.task_ids }}" | tr ',' '\n' >> jira_task_ids.csv
       - name: Display CSV content
         run: cat jira_task_ids.csv
