@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - csv-reader
-  workflow_dispatch:
-    inputs:
-      task_ids:
-        description: 'Comma-separated list of JIRA task IDs'
-        required: true
-        default: '10001,10002'
 
 jobs:
   example_job:
@@ -21,7 +15,8 @@ jobs:
       - name: Create CSV with JIRA task IDs
         run: |
           echo "JIRA_TASK_IDS" > jira_task_ids.csv
-          for task_id in ${{ github.event.inputs.task_ids }}; do
+          task_ids="10001,10002,10003"
+          for task_id in $(echo $task_ids | tr ',' ' '); do
             echo "$task_id" >> jira_task_ids.csv
           done
 
