@@ -1,4 +1,4 @@
-name:  CSV creator
+name: Example Workflow
 
 on:
   push:
@@ -8,6 +8,8 @@ on:
 jobs:
   example_job:
     runs-on: ubuntu-latest
+    env:
+      TASK_IDS: "10001,10002,10003"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -15,10 +17,16 @@ jobs:
       - name: Create CSV with JIRA task IDs
         run: |
           echo "JIRA_TASK_IDS" > jira_task_ids.csv
-          task_ids="10001,10002,10003"
-          for task_id in $(echo $task_ids | tr ',' ' '); do
+          for task_id in $(echo $TASK_IDS | tr ',' ' '); do
             echo "$task_id" >> jira_task_ids.csv
           done
 
-      - name: Display CSV content
-        run: cat jira_task_ids.csv
+      - name: Store CSV content in environment variable
+        id: store_csv
+        run: |
+          JIRA_TASK_IDS=$(cat jira_task_ids.csv | tr '\n' ',')
+          echo "JIRA_TASK_IDS=${JIRA_TASK_IDS%,}" >> $GITHUB_ENV
+
+      - name: Display CSV content from environment variable
+        run: |
+          echo "JIRA_TASK_IDS: $JIRA_TASK_IDS"
