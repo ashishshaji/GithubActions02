@@ -1,0 +1,49 @@
+name: Combined Workflow
+
+on:
+  push:
+    branches:
+       - dynamic-wf
+
+jobs:
+  generate-and-use-output:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Generate Repositories Output
+        id: generate_output
+        run: |
+          echo '{
+            "Repo1": { "Source_System": "Bitbucket" },
+            "Repo2": { "Source_System": "ado" },
+            "Repo3": { "Source_System": "GitHub" }
+          }' > output.json
+          repos=$(jq -r 'keys | join(",")' output.json)
+          echo "::set-output name=repo_list::$repos"
+
+      - name: Parse JSON and Create CSVs
+        id: parse
+        run: |
+          repos=$(cat output.json | jq -r 'keys[]')
+          for repo in $repos; do
+            source_system=$(cat output.json | jq -r --arg repo "$repo" '.[$repo].Source_System')
+            echo "JIRA_TASK_IDS" > "${repo}_jira_task_ids.csv"
+            echo "$source_system" >> "${repo}_jira_task_ids.csv"
+            echo "$repo: $source_system" >> output.log
+
+  call-second-job:
+    needs: generate-and-use-output
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: [${{ needs.generate-and-use-output.outputs.repo_list }}]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Use Source System for ${{ matrix.repo }}
+        run: |
+          source_system=$(cat output.json | jq -r --arg repo "${{ matrix.repo }}" '.[$repo].Source_System')
+          echo "Running tasks for ${{ matrix.repo }} with Source_System: $source_system"
