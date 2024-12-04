@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repo: [${{ needs.generate-and-use-output.outputs.repo_list }}]
+        repo: ${{ needs.generate-and-use-output.outputs.repo_list }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
