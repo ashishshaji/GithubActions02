@@ -3,7 +3,7 @@ name: Combined Workflow
 on:
   push:
     branches:
-       - dynamic-wf
+      - csv-reader
 
 jobs:
   generate-and-use-output:
@@ -23,27 +23,28 @@ jobs:
           repos=$(jq -r 'keys | join(",")' output.json)
           echo "::set-output name=repo_list::$repos"
 
-      - name: Parse JSON and Create CSVs
+      - name: Parse JSON and Create List
         id: parse
         run: |
-          repos=$(cat output.json | jq -r 'keys[]')
+          repos=$(jq -r 'keys[]' output.json)
+          repo_list=()
           for repo in $repos; do
-            source_system=$(cat output.json | jq -r --arg repo "$repo" '.[$repo].Source_System')
-            echo "JIRA_TASK_IDS" > "${repo}_jira_task_ids.csv"
-            echo "$source_system" >> "${repo}_jira_task_ids.csv"
-            echo "$repo: $source_system" >> output.log
+            source_system=$(jq -r --arg repo "$repo" '.[$repo].Source_System' output.json)
+            repo_list+=("$repo:$source_system")
+          done
+          echo "::set-output name=repo_list::$(printf '%s\n' "${repo_list[@]}" | jq -R . | jq -s .)"
 
   call-second-job:
     needs: generate-and-use-output
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repo: ${{ needs.generate-and-use-output.outputs.repo_list }}
+        repo: ${{ fromJson(needs.generate-and-use-output.outputs.repo_list) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Use Source System for ${{ matrix.repo }}
         run: |
-          source_system=$(cat output.json | jq -r --arg repo "${{ matrix.repo }}" '.[$repo].Source_System')
-          echo "Running tasks for ${{ matrix.repo }} with Source_System: $source_system"
+          IFS=':' read -r repo source_system <<< "${{ matrix.repo }}"
+          echo "Running tasks for $repo with Source_System: $source_system"
