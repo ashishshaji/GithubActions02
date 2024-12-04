@@ -3,7 +3,7 @@ name: Combined Workflow
 on:
   push:
     branches:
-      - csv-reader
+       - dynamic-wf
 
 jobs:
   generate-and-use-output:
